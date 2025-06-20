@@ -1,35 +1,39 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import { IBook } from "./book.interface";
 
 const bookSchema = new Schema<IBook>(
    {
       title: {
          type: String,
-         required: true,
+         required: [true, "Must provide a book title"],
          trim: true,
       },
       author: {
          type: String,
-         required: true,
+         required: [true, "Must provide an author name"],
          trim: true,
       },
       genre: {
          type: String,
          required: true,
-         enum: [
-            "FICTION",
-            "NON_FICTION",
-            "SCIENCE",
-            "HISTORY",
-            "BIOGRAPHY",
-            "FANTASY",
-         ],
+         enum: {
+            values: [
+               "FICTION",
+               "NON_FICTION",
+               "SCIENCE",
+               "HISTORY",
+               "BIOGRAPHY",
+               "FANTASY",
+            ],
+            message:
+               "Must provide a valid genre. {VALUE} is not a valid genre.",
+         },
       },
       isbn: {
          type: String,
-         required: true,
+         required: [true, "Must provide an isbn"],
          trim: true,
-         unique: true,
+         unique: [true, "Must provide an unique isbn"],
       },
       description: {
          type: String,
@@ -38,7 +42,7 @@ const bookSchema = new Schema<IBook>(
       },
       copies: {
          type: Number,
-         required: true,
+         required: [true, "Must provide 'copies' quantity amount."],
          min: 0,
       },
       available: {
@@ -49,24 +53,13 @@ const bookSchema = new Schema<IBook>(
    },
    {
       timestamps: true,
+      versionKey: false,
    }
 );
 
-// interface IBook {
-//     title: string;
-//     author: string;
-//     genre:
-//        | "FICTION"
-//        | "NON_FICTION"
-//        | "SCIENCE"
-//        | "HISTORY"
-//        | "BIOGRAPHY"
-//        | "FANTASY";
-//     isbn: string;
-//     description?: string;
-//     copies: number;
-//     available: boolean;
-//  }
+const Book = model<IBook>("Book", bookSchema);
+
+export default Book;
 
 // title (string) — Mandatory. The book’s title.
 // author (string) — Mandatory. The book’s author.

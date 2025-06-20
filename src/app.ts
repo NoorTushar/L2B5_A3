@@ -1,8 +1,11 @@
 import express, { Application, NextFunction, Request, Response } from "express";
+import bookRoute from "./app/modules/book/book.route";
 
 const app: Application = express();
 
 app.use(express.json());
+
+app.use("/api/books", bookRoute);
 
 app.get("/", (req: Request, res: Response) => {
    res.send("Hello from server");

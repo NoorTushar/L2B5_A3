@@ -1,19 +1,15 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
 import app from "./app";
 import mongoose from "mongoose";
-
-const port = 3000;
+import config from "./config";
 
 let server;
 
 async function main() {
    try {
-      await mongoose.connect(
-         "mongodb+srv://library_admin:library_admin@cluster0.j7c4zww.mongodb.net/mehnoor_library?retryWrites=true&w=majority&appName=Cluster0"
-      );
+      await mongoose.connect(config.database_url as string);
 
-      server = app.listen(port, () => {
-         console.log(`Server listening on port ${port}`);
+      server = app.listen(config.port, () => {
+         console.log(`Server listening on port ${config.port}`);
       });
    } catch (error) {
       console.log(error);
