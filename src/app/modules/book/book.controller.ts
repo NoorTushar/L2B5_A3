@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Book from "./book.model";
 import { IBook } from "./book.interface";
 
-export const createBook = async (req: Request, res: Response) => {
+const createBook = async (req: Request, res: Response) => {
    const payload: IBook = req.body;
    console.log({ payload });
    try {
@@ -22,7 +22,7 @@ export const createBook = async (req: Request, res: Response) => {
    }
 };
 
-export const getAllBooks = async (req: Request, res: Response) => {
+const getAllBooks = async (req: Request, res: Response) => {
    try {
       const data = await Book.find();
 
@@ -40,7 +40,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
    }
 };
 
-export const getSingleBook = async (req: Request, res: Response) => {
+const getSingleBook = async (req: Request, res: Response) => {
    const { bookId } = req.params;
 
    try {
@@ -59,11 +59,14 @@ export const getSingleBook = async (req: Request, res: Response) => {
       });
    }
 };
-export const updateBook = async (req: Request, res: Response) => {
+const updateBook = async (req: Request, res: Response) => {
    const { bookId } = req.params;
    const payload = req.body;
    try {
-      const data = await Book.findByIdAndUpdate(bookId, payload, { new: true });
+      const data = await Book.findByIdAndUpdate(bookId, payload, {
+         new: true,
+         runValidators: true, // this will run validators
+      });
 
       res.status(200).send({
          success: true,
@@ -78,16 +81,16 @@ export const updateBook = async (req: Request, res: Response) => {
       });
    }
 };
-export const deleteBook = async (req: Request, res: Response) => {
+const deleteBook = async (req: Request, res: Response) => {
    const { bookId } = req.params;
 
    try {
-      const data = await Book.findByIdAndUpdate(bookId);
+      await Book.findByIdAndDelete(bookId);
 
       res.status(200).send({
          success: true,
          message: "Book deleted successfully",
-         data: data,
+         data: null,
       });
    } catch (error: any) {
       res.status(400).send({
@@ -96,6 +99,14 @@ export const deleteBook = async (req: Request, res: Response) => {
          error,
       });
    }
+};
+
+export const mangoController = {
+   createBook,
+   getAllBooks,
+   getSingleBook,
+   updateBook,
+   deleteBook,
 };
 
 /*
