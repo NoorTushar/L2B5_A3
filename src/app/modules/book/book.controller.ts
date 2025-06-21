@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Book from "./book.model";
 import { IBook } from "./book.interface";
+import { SortOrder } from "mongoose";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
    const payload: IBook = req.body;
@@ -20,7 +21,12 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllBooks = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const data = await Book.find();
+      const filter = req.query.filter ? { genre: req.query.filter } : {};
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const data = await Book.find(filter)
+         .sort({ createdAt: (req.query.sort as SortOrder) || "asc" })
+         .limit(limit);
 
       res.status(200).send({
          success: true,
