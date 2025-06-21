@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Book from "./book.model";
 import { IBook } from "./book.interface";
 
-const createBook = async (req: Request, res: Response) => {
+const createBook = async (req: Request, res: Response, next: NextFunction) => {
    const payload: IBook = req.body;
    console.log({ payload });
    try {
@@ -14,15 +14,11 @@ const createBook = async (req: Request, res: Response) => {
          data: data,
       });
    } catch (error: any) {
-      res.status(400).send({
-         success: false,
-         message: error.message,
-         error,
-      });
+      next(error);
    }
 };
 
-const getAllBooks = async (req: Request, res: Response) => {
+const getAllBooks = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const data = await Book.find();
 
@@ -32,15 +28,15 @@ const getAllBooks = async (req: Request, res: Response) => {
          data: data,
       });
    } catch (error: any) {
-      res.status(400).send({
-         success: false,
-         message: error.message,
-         error,
-      });
+      next(error);
    }
 };
 
-const getSingleBook = async (req: Request, res: Response) => {
+const getSingleBook = async (
+   req: Request,
+   res: Response,
+   next: NextFunction
+) => {
    const { bookId } = req.params;
 
    try {
@@ -52,14 +48,10 @@ const getSingleBook = async (req: Request, res: Response) => {
          data: data,
       });
    } catch (error: any) {
-      res.status(400).send({
-         success: false,
-         message: error.message,
-         error,
-      });
+      next(error);
    }
 };
-const updateBook = async (req: Request, res: Response) => {
+const updateBook = async (req: Request, res: Response, next: NextFunction) => {
    const { bookId } = req.params;
    const payload = req.body;
    try {
@@ -74,14 +66,10 @@ const updateBook = async (req: Request, res: Response) => {
          data: data,
       });
    } catch (error: any) {
-      res.status(400).send({
-         success: false,
-         message: error.message,
-         error,
-      });
+      next(error);
    }
 };
-const deleteBook = async (req: Request, res: Response) => {
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
    const { bookId } = req.params;
 
    try {
@@ -93,11 +81,7 @@ const deleteBook = async (req: Request, res: Response) => {
          data: null,
       });
    } catch (error: any) {
-      res.status(400).send({
-         success: false,
-         message: error.message,
-         error,
-      });
+      next(error);
    }
 };
 
@@ -108,22 +92,3 @@ export const mangoController = {
    updateBook,
    deleteBook,
 };
-
-/*
-{
-  "success": true,
-  "message": "Book created successfully",
-  "data": {
-    "_id": "64f123abc4567890def12345",
-    "title": "The Theory of Everything",
-    "author": "Stephen Hawking",
-    "genre": "SCIENCE",
-    "isbn": "9780553380163",
-    "description": "An overview of cosmology and black holes.",
-    "copies": 5,
-    "available": true,
-    "createdAt": "2024-11-19T10:23:45.123Z",
-    "updatedAt": "2024-11-19T10:23:45.123Z"
-  }
-}
-*/

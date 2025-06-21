@@ -21,7 +21,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
    if (error) {
       res.status(400).send({
-         message: "Something went wrong",
+         success: false,
+         message: error.message,
          error: error,
       });
    }
