@@ -79,3 +79,56 @@ npm run dev
 ```
 npm run build
 ```
+
+## 🟪 API Details
+
+### 📋 Book CRUD APIs:
+
+1. 🧭 Create book and insert into the database.
+
+   Method: POST
+
+   API: `/api/books`
+
+2. 🧭 Get all books. You can filter them using the `genre`. Sort by `createdAt` either by `desc` or `asc` and limit the data (by default 10 data will be shown at once).
+
+   Method: GET
+
+   API example: `/api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5`
+
+3. 🧭 Get a single book data using book id.
+
+   Method: GET
+
+   API: `/api/books/:bookId`
+
+4. 🧭 Update a single book information.
+
+   Method: PUT
+
+   API: `/api/books/:bookId`
+
+5. 🧭 Delete a book from the database.
+
+   Method: DELETE
+
+   API: `/api/books/:bookId`
+
+### 📋 Borrow Books CRUD APIs:
+
+1. 🧭 Borrow a book
+
+   Method: POST
+
+   API: `/api/borrow`
+
+2. 🧭 Borrowed book summary.
+
+   It will return a summary of borrowed books, including:
+
+   Total borrowed quantity per book (totalQuantity)
+   Book details: title and isbn
+
+   Method: GET
+
+   API: `/api/borrow`
