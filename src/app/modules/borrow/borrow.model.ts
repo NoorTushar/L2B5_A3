@@ -12,8 +12,8 @@ const borrowSchema = new Schema<IBorrow>(
       },
       quantity: {
          type: Number,
-         required: [true, "Must provide quantity to borrow."],
-         min: 1,
+         required: [true, "Must provide a quantity to borrow."],
+         min: [1, "Must borrow atleast quantity of 1."],
       },
       dueDate: {
          type: Date,
@@ -48,9 +48,6 @@ borrowSchema.pre("save", async function (next) {
 
 // post-hook middleware: after borrowing update the book quantity
 borrowSchema.post("save", async function (doc) {
-   console.log({ doc });
-   console.log(this);
-
    await Book.findByIdAndUpdate(doc.book, {
       $inc: { copies: -doc.quantity },
    });
@@ -59,6 +56,3 @@ borrowSchema.post("save", async function (doc) {
 const Borrow = model<IBorrow>("Borrow", borrowSchema);
 
 export default Borrow;
-// book (objectId) — Mandatory. References the borrowed book’s ID.
-// quantity (number) — Mandatory. Positive integer representing the number of copies borrowed.
-// dueDate (date) — Mandatory. The date by which the book must be returned.

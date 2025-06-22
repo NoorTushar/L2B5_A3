@@ -19,7 +19,8 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
     if (error) {
         res.status(400).send({
-            message: "Something went wrong",
+            success: false,
+            message: error.message,
             error: error,
         });
     }

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mangoController = void 0;
 const book_model_1 = __importDefault(require("./book.model"));
-const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
     console.log({ payload });
     try {
@@ -26,16 +26,16 @@ const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
-        res.status(400).send({
-            success: false,
-            message: error.message,
-            error,
-        });
+        next(error);
     }
 });
-const getAllBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield book_model_1.default.find();
+        const filter = req.query.filter ? { genre: req.query.filter } : {};
+        const limit = parseInt(req.query.limit) || 10;
+        const data = yield book_model_1.default.find(filter)
+            .sort({ createdAt: req.query.sort || "asc" })
+            .limit(limit);
         res.status(200).send({
             success: true,
             message: "Books retrieved successfully",
@@ -43,14 +43,10 @@ const getAllBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
     catch (error) {
-        res.status(400).send({
-            success: false,
-            message: error.message,
-            error,
-        });
+        next(error);
     }
 });
-const getSingleBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getSingleBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookId } = req.params;
     try {
         const data = yield book_model_1.default.findById(bookId);
@@ -61,14 +57,10 @@ const getSingleBook = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
-        res.status(400).send({
-            success: false,
-            message: error.message,
-            error,
-        });
+        next(error);
     }
 });
-const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookId } = req.params;
     const payload = req.body;
     try {
@@ -83,14 +75,10 @@ const updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
-        res.status(400).send({
-            success: false,
-            message: error.message,
-            error,
-        });
+        next(error);
     }
 });
-const deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookId } = req.params;
     try {
         yield book_model_1.default.findByIdAndDelete(bookId);
@@ -101,11 +89,7 @@ const deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
-        res.status(400).send({
-            success: false,
-            message: error.message,
-            error,
-        });
+        next(error);
     }
 });
 exports.mangoController = {
@@ -115,21 +99,3 @@ exports.mangoController = {
     updateBook,
     deleteBook,
 };
-/*
-{
-  "success": true,
-  "message": "Book created successfully",
-  "data": {
-    "_id": "64f123abc4567890def12345",
-    "title": "The Theory of Everything",
-    "author": "Stephen Hawking",
-    "genre": "SCIENCE",
-    "isbn": "9780553380163",
-    "description": "An overview of cosmology and black holes.",
-    "copies": 5,
-    "available": true,
-    "createdAt": "2024-11-19T10:23:45.123Z",
-    "updatedAt": "2024-11-19T10:23:45.123Z"
-  }
-}
-*/

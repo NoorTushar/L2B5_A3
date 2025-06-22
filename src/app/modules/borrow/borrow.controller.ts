@@ -8,7 +8,7 @@ const createBorrow = async (
    next: NextFunction
 ) => {
    const payload: IBorrow = req.body;
-   console.log({ payload });
+
    try {
       const data = await Borrow.create(payload);
 
