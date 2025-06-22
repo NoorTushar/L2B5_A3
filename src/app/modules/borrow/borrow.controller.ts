@@ -12,6 +12,10 @@ const createBorrow = async (
    try {
       const data = await Borrow.create(payload);
 
+      // update the availability to `false` if copies become 0
+      // using static method
+      await Borrow.updateAvailability(data.book);
+
       res.status(201).send({
          success: true,
          message: "Book borrowed successfully",
