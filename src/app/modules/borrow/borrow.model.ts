@@ -54,14 +54,9 @@ borrowSchema.post("save", async function (doc) {
 });
 
 borrowSchema.static("updateAvailability", async function (bookId) {
-   console.log("inside static");
-
    const book: IBook | null = await Book.findById(bookId);
 
-   console.log({ book });
-
    const copies = book?.copies;
-   console.log({ copies });
 
    if (copies === 0) {
       await Book.findByIdAndUpdate(bookId, { available: false });
