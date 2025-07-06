@@ -1,10 +1,20 @@
 import express, { Application, NextFunction, Request, Response } from "express";
-
+import cors from "cors";
 import routes from "./app/routes";
 
 const app: Application = express();
 
 app.use(express.json());
+
+app.use(
+   cors({
+      origin: [
+         "https://mehnoor-library-frontend.vercel.app",
+         "http://localhost:5173",
+         "http://localhost:5174",
+      ],
+   })
+);
 
 app.use(routes);
 
