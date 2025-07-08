@@ -18,6 +18,9 @@ const createBorrow = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const payload = req.body;
     try {
         const data = yield borrow_model_1.default.create(payload);
+        // update the availability to `false` if copies become 0
+        // using static method
+        yield borrow_model_1.default.updateAvailability(data.book);
         res.status(201).send({
             success: true,
             message: "Book borrowed successfully",

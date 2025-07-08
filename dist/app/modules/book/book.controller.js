@@ -63,6 +63,10 @@ const getSingleBook = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 const updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookId } = req.params;
     const payload = req.body;
+    if (payload.copies === 0) {
+        payload.available = false;
+    }
+    console.log({ payload });
     try {
         const data = yield book_model_1.default.findByIdAndUpdate(bookId, payload, {
             new: true,

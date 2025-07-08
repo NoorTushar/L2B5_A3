@@ -57,5 +57,16 @@ borrowSchema.post("save", function (doc) {
         });
     });
 });
+borrowSchema.static("updateAvailability", function (bookId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const book = yield book_model_1.default.findById(bookId);
+        const copies = book === null || book === void 0 ? void 0 : book.copies;
+        if (copies === 0) {
+            yield book_model_1.default.findByIdAndUpdate(bookId, { available: false });
+            return;
+        }
+        return;
+    });
+});
 const Borrow = (0, mongoose_1.model)("Borrow", borrowSchema);
 exports.default = Borrow;

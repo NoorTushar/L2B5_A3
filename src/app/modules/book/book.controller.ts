@@ -60,6 +60,12 @@ const getSingleBook = async (
 const updateBook = async (req: Request, res: Response, next: NextFunction) => {
    const { bookId } = req.params;
    const payload = req.body;
+
+   if (payload.copies === 0) {
+      payload.available = false;
+   }
+   console.log({ payload });
+
    try {
       const data = await Book.findByIdAndUpdate(bookId, payload, {
          new: true,
